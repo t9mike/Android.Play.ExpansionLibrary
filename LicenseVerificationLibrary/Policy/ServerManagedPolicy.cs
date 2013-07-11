@@ -257,7 +257,7 @@ namespace LicenseVerificationLibrary.Policy
         /// <returns>
         /// The allow access.
         /// </returns>
-        public bool AllowAccess()
+        public bool AfterServerCheckAllowAccess()
         {
             bool allowed = false;
 
@@ -294,7 +294,7 @@ namespace LicenseVerificationLibrary.Policy
         /// <param name="rawData">
         /// the raw server response data
         /// </param>
-        public void ProcessServerResponse(PolicyServerResponse response, ResponseData rawData)
+        public void ProcessServerConnectionSuccess(PolicyServerResponse response, ResponseData rawData)
         {
             // Update retry counter
             this.RetryCount = response == PolicyServerResponse.Retry ? this.RetryCount + 1 : 0;
@@ -327,6 +327,16 @@ namespace LicenseVerificationLibrary.Policy
             this.LastResponse = response;
 
             this.preferences.Commit();
+        }
+
+        public bool BeforeServerCheckAllowAccess()
+        {
+            return AfterServerCheckAllowAccess();
+        }
+
+        public void ProcessServerConnectionError(PolicyServerResponse response, ResponseData rawData)
+        {
+            ProcessServerConnectionSuccess(response, rawData);
         }
 
         #endregion

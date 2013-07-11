@@ -52,7 +52,7 @@ namespace LicenseVerificationLibrary.Policy
         /// <returns>
         /// The allow access.
         /// </returns>
-        public bool AllowAccess()
+        public bool AfterServerCheckAllowAccess()
         {
             return this.lastResponse == PolicyServerResponse.Licensed;
         }
@@ -68,9 +68,19 @@ namespace LicenseVerificationLibrary.Policy
         /// <param name="rawData">
         /// the raw server response data
         /// </param>
-        public void ProcessServerResponse(PolicyServerResponse response, ResponseData rawData)
+        public void ProcessServerConnectionSuccess(PolicyServerResponse response, ResponseData rawData)
         {
             this.lastResponse = response;
+        }
+
+        public bool BeforeServerCheckAllowAccess()
+        {
+            return AfterServerCheckAllowAccess();
+        }
+
+        public void ProcessServerConnectionError(PolicyServerResponse response, ResponseData rawData)
+        {
+            ProcessServerConnectionSuccess(response, rawData);
         }
 
         #endregion

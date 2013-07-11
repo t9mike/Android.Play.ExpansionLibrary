@@ -171,7 +171,7 @@ namespace LicenseVerificationLibrary
             lock (this.locker)
             {
                 // If we have a valid recent LICENSED response, we can skip asking Market/Play.
-                if (this.policy.AllowAccess())
+                if (this.policy.BeforeServerCheckAllowAccess())
                 {
                     System.Diagnostics.Debug.WriteLine("Using cached license response");
                     callback.Allow(PolicyServerResponse.Licensed);
@@ -399,9 +399,9 @@ namespace LicenseVerificationLibrary
         {
             lock (this.locker)
             {
-                this.policy.ProcessServerResponse(PolicyServerResponse.Retry, null);
+                this.policy.ProcessServerConnectionError(PolicyServerResponse.Retry, null);
 
-                if (this.policy.AllowAccess())
+                if (this.policy.AfterServerCheckAllowAccess())
                 {
                     validator.GetCallback().Allow(PolicyServerResponse.Retry);
                 }

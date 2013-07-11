@@ -310,12 +310,12 @@ namespace LicenseVerificationLibrary
         private void HandleResponse(PolicyServerResponse response, ResponseData rawData)
         {
             // Update policy data and increment retry counter (if needed)
-            this.policy.ProcessServerResponse(response, rawData);
+            this.policy.ProcessServerConnectionSuccess(response, rawData);
 
             // Given everything we know, including cached data, ask the policy if we
             // should grant
             // access.
-            if (this.policy.AllowAccess())
+            if (this.policy.AfterServerCheckAllowAccess())
             {
                 this.licenseCheckerCallback.Allow(response);
             }

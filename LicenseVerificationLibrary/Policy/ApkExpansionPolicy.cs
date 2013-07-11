@@ -294,7 +294,7 @@ namespace LicenseVerificationLibrary.Policy
         /// <returns>
         /// True if access is allowed, otherwise false.
         /// </returns>
-        public bool AllowAccess()
+        public bool AfterServerCheckAllowAccess()
         {
             long ts = PolicyExtensions.GetCurrentMilliseconds();
             if (this.LastResponse == PolicyServerResponse.Licensed)
@@ -317,7 +317,16 @@ namespace LicenseVerificationLibrary.Policy
 
             return false;
         }
-        
+
+        public bool BeforeServerCheckAllowAccess()
+        {
+            return AfterServerCheckAllowAccess();
+        }
+
+        public void ProcessServerConnectionError(PolicyServerResponse response, ResponseData rawData)
+        {
+        }
+
         public ExpansionFile GetExpansionFile(ExpansionFileType index)
         {
             return this.expansionFiles[(int)index];
@@ -354,7 +363,7 @@ namespace LicenseVerificationLibrary.Policy
         /// <param name="rawData">
         /// the raw server response data
         /// </param>
-        public void ProcessServerResponse(PolicyServerResponse response, ResponseData rawData)
+        public void ProcessServerConnectionSuccess(PolicyServerResponse response, ResponseData rawData)
         {
             // Update retry counter
             if (response == PolicyServerResponse.Retry)

@@ -8,14 +8,28 @@ namespace LicenseVerificationLibrary.Policy
         #region Public Methods and Operators
 
         /// <summary>
-        /// Check if the user should be allowed access to the application.
+        /// Before connecting to authentication service, this is called to see if we should skip the
+        /// check and just allow access.
         /// </summary>
         /// <returns>
         /// The allow access.
         /// </returns>
-        bool AllowAccess();
+        bool BeforeServerCheckAllowAccess();
 
         /// <summary>
+        /// After ProcessServerConnectionSuccess() or ProcessServerConnectionError() have been called,
+        /// this gets called to determine whether user should be allowed access.
+        /// </summary>
+        /// <returns>
+        /// The allow access.
+        /// </returns>
+        bool AfterServerCheckAllowAccess();
+
+        /// <summary>
+        /// Called when LicenseChecker was able to connect to the license server. You typically
+        /// do some interesting things with this data, and definately something that will be used
+        /// with AfterServerCheckAllowAccess(), which will be called sometime after.
+        /// 
         /// Provide results from contact with the license server. 
         /// Retry counts are incremented if the current value of response is 
         /// <see cref="PolicyServerResponse.Retry"/>. 
@@ -28,7 +42,13 @@ namespace LicenseVerificationLibrary.Policy
         /// The raw server response data, can be null for 
         /// <see cref="PolicyServerResponse.Retry"/>
         /// </param>
-        void ProcessServerResponse(PolicyServerResponse response, ResponseData rawData);
+        void ProcessServerConnectionSuccess(PolicyServerResponse response, ResponseData rawData);
+
+        /// <summary>
+        /// Similar to ProcessServerConnectionSuccess(), but called if there was an error connecting
+        /// to the authentication service.
+        /// </summary>
+        void ProcessServerConnectionError(PolicyServerResponse response, ResponseData rawData);
 
         #endregion
     }
